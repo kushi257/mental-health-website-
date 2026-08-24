@@ -1,0 +1,115 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(cuid())
+  name        String
+  isAnonymous Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  moodLogs           MoodLog[]
+  journalEntries     JournalEntry[]
+  exerciseCompletions ExerciseCompletion[]
+  screenerResults    ScreenerResult[]
+  bookings           Booking[]
+  safetyPlan         SafetyPlan?
+}
+
+model MoodLog {
+  id        String   @id @default(cuid())
+  userId    String
+  score     Int      // 1-5
+  tags      String   @default("[]") // JSON array of strings
+  note      String   @default("")
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model JournalEntry {
+  id               String   @id @default(cuid())
+  userId           String
+  type             String   // thought_record | worry | activation | distortion
+  situation        String   @default("")
+  automaticThought String   @default("")
+  evidenceFor      String   @default("")
+  evidenceAgainst  String   @default("")
+  alternativeView  String   @default("")
+  worryText        String   @default("")
+  deferredTo       String   @default("")
+  activityName     String   @default("")
+  scheduledFor     String   @default("")
+  completed        Boolean  @default(false)
+  distortionType   String   @default("")
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ExerciseCompletion {
+  id           String   @id @default(cuid())
+  userId       String
+  exerciseId   String
+  exerciseName String
+  category     String
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model ScreenerResult {
+  id        String   @id @default(cuid())
+  userId    String
+  phq9Score Int
+  gad7Score Int
+  tier      String   // LOW | MODERATE | HIGH
+  answers   String   @default("{}") // JSON
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model Counsellor {
+  id        String    @id @default(cuid())
+  name      String
+  title     String
+  specialty String
+  slotTime  String    // ISO datetime string
+  available Boolean   @default(true)
+
+  bookings Booking[]
+}
+
+model Booking {
+  id           String   @id @default(cuid())
+  userId       String
+  counsellorId String
+  slotTime     String
+  counsellorName String
+  status       String   @default("confirmed") // confirmed | cancelled
+  createdAt    DateTime @default(now())
+
+  user       User       @relation(fields: [userId], references: [id])
+  counsellor Counsellor @relation(fields: [counsellorId], references: [id])
+}
+
+model SafetyPlan {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  warningSigns         String   @default("[]") // JSON array
+  copingStrategies     String   @default("[]")
+  supportContacts      String   @default("[]")
+  professionalContacts String   @default("[]")
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+}
