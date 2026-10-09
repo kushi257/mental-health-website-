@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "vercel-build": "prisma migrate deploy && prisma generate && next build",
     "start": "next start",
+    "postinstall": "prisma generate",
     "lint": "eslint",
     "db:migrate": "prisma migrate dev --name init",
     "db:generate": "prisma generate",

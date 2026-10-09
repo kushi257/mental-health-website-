@@ -29,6 +29,105 @@ export const ANSWER_OPTIONS = [
   { label: 'Nearly every day', value: 3 },
 ]
 
+export const QUESTION_ANSWER_OPTIONS = [
+  [
+    { label: 'I still make room for things I enjoy', value: 0 },
+    { label: 'Joy has felt distant on a few days', value: 1 },
+    { label: 'Most days have felt hard to enjoy', value: 2 },
+    { label: 'I have hardly felt interested in anything', value: 3 },
+  ],
+  [
+    { label: 'My mood has felt steady', value: 0 },
+    { label: 'I have had a few noticeably low days', value: 1 },
+    { label: 'Low feelings have been present most days', value: 2 },
+    { label: 'I have felt persistently low or hopeless', value: 3 },
+  ],
+  [
+    { label: 'Sleep has generally come easily', value: 0 },
+    { label: 'Sleep has been unsettled on a few nights', value: 1 },
+    { label: 'Sleep has been difficult most nights', value: 2 },
+    { label: 'Sleep has felt disrupted nearly every night', value: 3 },
+  ],
+  [
+    { label: 'I have had my usual energy', value: 0 },
+    { label: 'I have felt worn out on some days', value: 1 },
+    { label: 'Low energy has been a regular struggle', value: 2 },
+    { label: 'I have felt drained nearly every day', value: 3 },
+  ],
+  [
+    { label: 'Eating has felt balanced for me', value: 0 },
+    { label: 'My appetite has shifted a little', value: 1 },
+    { label: 'Eating changes have been noticeable most days', value: 2 },
+    { label: 'My appetite has felt difficult to manage nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I have felt okay about myself', value: 0 },
+    { label: 'Self-doubt has visited me on some days', value: 1 },
+    { label: 'I have often felt like I am letting people down', value: 2 },
+    { label: 'I have felt deeply critical of myself nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I can usually keep my attention on things', value: 0 },
+    { label: 'My focus has wandered on some days', value: 1 },
+    { label: 'Concentrating has been difficult most days', value: 2 },
+    { label: 'It has felt very hard to focus nearly every day', value: 3 },
+  ],
+  [
+    { label: 'My pace and restlessness feel usual for me', value: 0 },
+    { label: 'I have noticed some changes on a few days', value: 1 },
+    { label: 'I have often felt unusually slowed down or restless', value: 2 },
+    { label: 'These changes have been noticeable nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I have not had these thoughts', value: 0 },
+    { label: 'A difficult thought has crossed my mind on some days', value: 1 },
+    { label: 'These thoughts have returned more than half the days', value: 2 },
+    { label: 'These thoughts have been present nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I have felt generally calm', value: 0 },
+    { label: 'Nervous feelings have shown up on some days', value: 1 },
+    { label: 'I have felt on edge most days', value: 2 },
+    { label: 'I have felt intensely nervous nearly every day', value: 3 },
+  ],
+  [
+    { label: 'Worries usually loosen their hold', value: 0 },
+    { label: 'I have struggled to stop worrying on some days', value: 1 },
+    { label: 'Worry has been difficult to control most days', value: 2 },
+    { label: 'Worry has felt impossible to switch off nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I have been able to let worries rest', value: 0 },
+    { label: 'Several things have been on my mind at times', value: 1 },
+    { label: 'I have carried many worries most days', value: 2 },
+    { label: 'Different worries have filled my thoughts nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I can usually settle my body and mind', value: 0 },
+    { label: 'Relaxing has taken extra effort on some days', value: 1 },
+    { label: 'I have found it hard to relax most days', value: 2 },
+    { label: 'I have felt unable to properly relax nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I have generally been able to sit still', value: 0 },
+    { label: 'Restlessness has appeared on some days', value: 1 },
+    { label: 'I have felt restless and fidgety most days', value: 2 },
+    { label: 'Sitting still has felt very difficult nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I have felt patient enough for daily life', value: 0 },
+    { label: 'I have been more easily irritated on some days', value: 1 },
+    { label: 'I have felt irritable most days', value: 2 },
+    { label: 'Small things have felt intensely irritating nearly every day', value: 3 },
+  ],
+  [
+    { label: 'I have generally felt safe', value: 0 },
+    { label: 'Fear has visited me on some days', value: 1 },
+    { label: 'I have often expected something bad to happen', value: 2 },
+    { label: 'A sense of danger has stayed with me nearly every day', value: 3 },
+  ],
+]
+
 export type Tier = 'LOW' | 'MODERATE' | 'HIGH'
 
 export interface ScoringResult {

@@ -48,9 +48,9 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
   }
 
   return (
-    <div className="min-h-screen pb-24" style={{ background: 'linear-gradient(180deg, #f0fdfa 0%, #f8fffe 100%)' }}>
+    <div className="app-page min-h-screen pb-24">
       <Navigation />
-      <main className="max-w-3xl mx-auto px-4 pt-4">
+      <main className="app-content max-w-3xl mx-auto px-4 pt-4">
         <ExerciseComponent onComplete={handleComplete} />
       </main>
     </div>

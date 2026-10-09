@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { ChevronRight, ChevronLeft, Brain, Heart } from 'lucide-react'
-import { PHQ9_QUESTIONS, GAD7_QUESTIONS, ANSWER_OPTIONS } from '@/lib/scoring'
+import { PHQ9_QUESTIONS, GAD7_QUESTIONS, ANSWER_OPTIONS, QUESTION_ANSWER_OPTIONS } from '@/lib/scoring'
 
 export default function ScreenerPage() {
   const router = useRouter()
@@ -16,6 +16,8 @@ export default function ScreenerPage() {
   const questions = phase === 'phq9' ? PHQ9_QUESTIONS : GAD7_QUESTIONS
   const answers = phase === 'phq9' ? phq9Answers : gad7Answers
   const setAnswers = phase === 'phq9' ? setPhq9Answers : setGad7Answers
+  const questionIndex = phase === 'phq9' ? currentQ : PHQ9_QUESTIONS.length + currentQ
+  const answerOptions = QUESTION_ANSWER_OPTIONS[questionIndex] || ANSWER_OPTIONS
 
   const setAnswer = (val: number) => {
     const updated = [...answers]
@@ -174,7 +176,7 @@ export default function ScreenerPage() {
           </h2>
 
           <div className="space-y-3">
-            {ANSWER_OPTIONS.map(opt => (
+            {answerOptions.map(opt => (
               <button
                 key={opt.value}
                 id={`answer-${opt.value}`}

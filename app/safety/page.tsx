@@ -54,7 +54,9 @@ function SafetyContent() {
           <div className="space-y-4">
             <a
               id="telemanas-call"
-              href="tel:14416"
+              href="https://telemanas.mohfw.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-4 bg-red-500/20 border-2 border-red-400/50 rounded-2xl p-5 hover:bg-red-500/30 transition-all group"
             >
               <div className="w-14 h-14 bg-red-500 rounded-2xl flex items-center justify-center shadow-lg shadow-red-500/40 group-hover:scale-110 transition-transform">
@@ -70,7 +72,9 @@ function SafetyContent() {
 
             <a
               id="icall-call"
-              href="tel:9152987821"
+              href="https://icallhelpline.org/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-4 bg-orange-500/10 border border-orange-400/30 rounded-2xl p-4 hover:bg-orange-500/20 transition-all group"
             >
               <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -81,11 +85,14 @@ function SafetyContent() {
                 <p className="text-orange-200 text-lg font-bold">9152987821</p>
                 <p className="text-orange-300 text-xs">TISS Counselling Service · Mon–Sat</p>
               </div>
+              <ExternalLink className="ml-auto text-orange-300 group-hover:translate-x-1 transition-transform" />
             </a>
 
             <a
               id="vandrevala-call"
-              href="tel:18602662345"
+              href="https://www.vandrevalafoundation.com/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-4 bg-blue-500/10 border border-blue-400/30 rounded-2xl p-4 hover:bg-blue-500/20 transition-all group"
             >
               <div className="w-12 h-12 bg-blue-500 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
@@ -96,6 +103,7 @@ function SafetyContent() {
                 <p className="text-blue-200 text-lg font-bold">1860-2662-345</p>
                 <p className="text-blue-300 text-xs">Free · 24/7 · Multi-lingual</p>
               </div>
+              <ExternalLink className="ml-auto text-blue-300 group-hover:translate-x-1 transition-transform" />
             </a>
           </div>
         </div>

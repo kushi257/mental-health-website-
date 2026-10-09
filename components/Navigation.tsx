@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   Home, Dumbbell, Video, MessageCircle, Calendar,
-  BarChart2, Shield, Users, Settings, LogOut, LogIn
+  BarChart2, Shield, Users, LogOut, LogIn
 } from 'lucide-react'
 
 const navItems = [
@@ -39,36 +39,31 @@ export default function Navigation({ name }: { name?: string }) {
   return (
     <>
       {/* Top bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100 px-4 py-3">
+      <header className="app-topbar fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-lg border-b border-gray-100 px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center">
+            <div className="brand-mark w-8 h-8 bg-gradient-to-br from-teal-500 to-teal-700 rounded-lg flex items-center justify-center">
               <span className="text-white text-xs font-bold">M</span>
             </div>
-            <span className="font-bold text-gray-800 text-lg">ManoMitra</span>
+            <span className="brand-wordmark text-gray-800 text-lg">ManoMitra</span>
           </div>
 
           <div className="flex items-center gap-3">
+            <Link href="/chatbot" className="btn-primary btn-pill hidden sm:inline-flex text-xs px-3 py-1.5">
+              <MessageCircle className="w-3.5 h-3.5" /> Chat with ManoBot
+            </Link>
+
             {name ? (
               <span className="text-xs text-gray-500 hidden sm:inline">
                 Hi, <strong className="text-teal-600">{name}</strong>
               </span>
             ) : null}
 
-            <Link
-              href="/admin"
-              className="text-xs text-gray-400 hover:text-gray-600 flex items-center gap-1 transition-colors px-2 py-1 rounded-lg hover:bg-gray-50"
-              title="Admin view"
-            >
-              <Settings className="w-3.5 h-3.5" />
-              Admin
-            </Link>
-
             {name ? (
               <button
                 id="logout-btn"
                 onClick={handleLogout}
-                className="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors border border-rose-200"
+                className="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors border border-rose-200"
                 title="Log out of session"
               >
                 <LogOut className="w-3.5 h-3.5" />
@@ -77,7 +72,7 @@ export default function Navigation({ name }: { name?: string }) {
             ) : (
               <Link
                 href="/onboarding"
-                className="text-xs font-semibold text-teal-600 hover:text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors border border-teal-200"
+                className="text-xs font-semibold text-teal-600 hover:text-teal-700 bg-teal-50 hover:bg-teal-100 px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-colors border border-teal-200"
               >
                 <LogIn className="w-3.5 h-3.5" />
                 Log in
@@ -88,7 +83,7 @@ export default function Navigation({ name }: { name?: string }) {
       </header>
 
       {/* Bottom nav */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-100 px-2 py-2">
+      <nav className="app-bottom-nav fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-100 px-2 py-2">
         <div className="max-w-4xl mx-auto flex items-center justify-around">
           {navItems.map(item => {
             const Icon = item.icon

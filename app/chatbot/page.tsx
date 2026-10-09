@@ -1,156 +1,127 @@
 'use client'
 
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import Navigation from '@/components/Navigation'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { MessageCircle, Bot, User, AlertTriangle, ArrowRight, Shield, Heart } from 'lucide-react'
-
-interface Option {
-  label: string
-  nextId: string
-  isCrisis?: boolean
-  linkToExercise?: string
-}
-
-interface Node {
-  id: string
-  message: string
-  options: Option[]
-}
-
-const CHAT_TREE: Record<string, Node> = {
-  start: {
-    id: 'start',
-    message: "Hello! I'm ManoBot, your guided first-response companion. How are you feeling right now?",
-    options: [
-      { label: "😰 I'm feeling overwhelmed by exams/studies", nextId: 'academic' },
-      { label: "😔 I'm feeling low or sad", nextId: 'low_mood' },
-      { label: "💤 I can't sleep or stop worrying", nextId: 'anxiety_sleep' },
-      { label: "🆘 I feel like I can't cope / thinking of ending my life", nextId: 'crisis', isCrisis: true },
-    ],
-  },
-
-  academic: {
-    id: 'academic',
-    message: "Academic pressure is very common among students. What aspect of studies is stressing you out most?",
-    options: [
-      { label: "Panicking before an upcoming exam", nextId: 'exam_panic' },
-      { label: "I keep procrastinating and feeling guilty", nextId: 'procrastination' },
-      { label: "I feel like everyone else is smarter than me (Imposter Syndrome)", nextId: 'imposter' },
-    ],
-  },
-
-  exam_panic: {
-    id: 'exam_panic',
-    message: "When panic strikes, focusing on your breathing can slow down your heart rate in under 2 minutes. Would you like to try a guided Box Breathing exercise?",
-    options: [
-      { label: "🌬️ Try Box Breathing now", nextId: 'done', linkToExercise: '/exercises/box-breathing' },
-      { label: "📝 Try CBT Thought Record to challenge exam fear", nextId: 'done', linkToExercise: '/exercises/thought-record' },
-    ],
-  },
-
-  procrastination: {
-    id: 'procrastination',
-    message: "Procrastination is often about emotion regulation, not laziness! Scheduling one tiny, 5-minute task is the best way to start.",
-    options: [
-      { label: "📅 Open Behavioral Activation Planner", nextId: 'done', linkToExercise: '/exercises/behavioral-activation' },
-      { label: "🎥 Watch micro-video on Procrastination Loop", nextId: 'done', linkToExercise: '/videos' },
-    ],
-  },
-
-  imposter: {
-    id: 'imposter',
-    message: "Imposter syndrome tricks us into ignoring our past achievements. Let's spot the cognitive distortions in your thinking.",
-    options: [
-      { label: "🔍 Spot Cognitive Distortions", nextId: 'done', linkToExercise: '/exercises/distortion-spotter' },
-      { label: "📝 Write a CBT Thought Record", nextId: 'done', linkToExercise: '/exercises/thought-record' },
-    ],
-  },
-
-  low_mood: {
-    id: 'low_mood',
-    message: "I'm sorry you're feeling down. Small gentle steps can help lift low mood gradually.",
-    options: [
-      { label: "💪 Try Progressive Muscle Relaxation", nextId: 'done', linkToExercise: '/exercises/pmr' },
-      { label: "📅 Schedule a low-effort positive activity", nextId: 'done', linkToExercise: '/exercises/behavioral-activation' },
-      { label: "🆘 I feel very hopeless right now", nextId: 'crisis', isCrisis: true },
-    ],
-  },
-
-  anxiety_sleep: {
-    id: 'anxiety_sleep',
-    message: "When thoughts run wild at night or during the day, grounding and worry-scheduling give your mind permission to rest.",
-    options: [
-      { label: "💨 4-7-8 Breathing for Sleep", nextId: 'done', linkToExercise: '/exercises/478-breathing' },
-      { label: '⏰ Park your worries in Worry Scheduler', nextId: 'done', linkToExercise: '/exercises/worry-scheduler' },
-      { label: '🌿 5-4-3-2-1 Sensory Grounding', nextId: 'done', linkToExercise: '/exercises/grounding-54321' },
-    ],
-  },
-
-  crisis: {
-    id: 'crisis',
-    message: 'CRISIS_TRIGGERED',
-    options: [],
-  },
-}
+import { Bot, User, Shield, Send, RotateCcw, ExternalLink } from 'lucide-react'
 
 interface MessageHistory {
   sender: 'bot' | 'user'
   text: string
 }
 
+const initialMessage = "Hello, I'm ManoBot. I'm here to listen and help you find a small next step. What's been on your mind?"
+
+const crisisPattern = /suicid|kill myself|end my life|self[- ]?harm|hurt myself|can't go on|cannot go on|no reason to live|harm someone/i
+
+function getSuggestions(history: MessageHistory[]) {
+  const recentUserMessage = [...history].reverse().find(message => message.sender === 'user')?.text || ''
+  const lastBotMessage = [...history].reverse().find(message => message.sender === 'bot')?.text || ''
+  const conversation = `${recentUserMessage} ${lastBotMessage}`.toLowerCase()
+  const turn = history.filter(message => message.sender === 'user').length
+
+  if (crisisPattern.test(conversation)) return []
+
+  const suggestionGroups = [
+    /exam|study|college|assignment|deadline|procrastinat/.test(conversation)
+      ? ['Break the task into steps', 'Help me choose what to do first', 'I am scared I will fall behind']
+      : null,
+    /friend|friendship|roommate|relationship|breakup|family|argument|fight/.test(conversation)
+      ? ['Help me understand what I feel', 'What could I say to them?', 'I need space before I respond']
+      : null,
+    /sleep|insomnia|awake|night|tired/.test(conversation)
+      ? ['Help me settle down for sleep', 'My mind keeps replaying something', 'Try a short grounding exercise']
+      : null,
+    /anxious|panic|worried|worry|stress|nervous/.test(conversation)
+      ? ['Help me calm my body', 'What part of this can I control?', 'I want to talk about the worry']
+      : null,
+    /sad|low|empty|hopeless|cry|unhappy|down/.test(conversation)
+      ? ['Help me get through the next hour', 'I want to understand this feeling', 'Suggest one gentle action']
+      : null,
+    /lonely|alone|isolated|nobody|no one/.test(conversation)
+      ? ['Help me reach out to someone', 'I want to talk about feeling alone', 'What can I do by myself right now?']
+      : null,
+  ].filter((group): group is string[] => group !== null)
+
+  const group = suggestionGroups[0] || [
+    ['Tell me more about this', 'Help me sort my thoughts', 'I want practical advice'],
+    ['What should I do next?', 'I am not sure how I feel', 'Can we look at this another way?'],
+    ['Help me make sense of it', 'What might help right now?', 'I want to keep talking'],
+  ][turn % 3]
+
+  return group
+}
+
 export default function ChatbotPage() {
   const router = useRouter()
-  const [currentNodeId, setCurrentNodeId] = useState('start')
   const [history, setHistory] = useState<MessageHistory[]>([
-    { sender: 'bot', text: CHAT_TREE.start.message },
+    { sender: 'bot', text: initialMessage },
   ])
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const currentNode = CHAT_TREE[currentNodeId]
+  const suggestedReplies = getSuggestions(history)
 
-  const handleOptionClick = (option: Option) => {
-    // Immediate Crisis Check
-    if (option.isCrisis || option.nextId === 'crisis' || option.label.toLowerCase().includes('crisis') || option.label.toLowerCase().includes('ending my life')) {
+  const sendMessage = async (text: string) => {
+    const trimmedText = text.trim()
+    if (!trimmedText || loading) return
+
+    if (crisisPattern.test(trimmedText)) {
       router.push('/safety?from=chatbot')
       return
     }
 
-    // Add user message to chat history
-    const updatedHistory: MessageHistory[] = [
-      ...history,
-      { sender: 'user', text: option.label },
-    ]
+    const nextHistory = [...history, { sender: 'user' as const, text: trimmedText }]
+    setHistory(nextHistory)
+    setInput('')
+    setLoading(true)
+    setError('')
 
-    const nextNode = CHAT_TREE[option.nextId]
-    if (nextNode) {
-      updatedHistory.push({ sender: 'bot', text: nextNode.message })
-      setCurrentNodeId(option.nextId)
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messages: nextHistory.slice(1).map(message => ({
+            role: message.sender === 'bot' ? 'model' : 'user',
+            parts: [{ text: message.text }],
+          })),
+        }),
+      })
+      const result = await response.json() as { reply?: string; error?: string }
+      if (!response.ok || !result.reply) throw new Error(result.error || 'Unable to get a reply.')
+      setHistory(current => [...current, { sender: 'bot', text: result.reply || '' }])
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : 'Unable to get a reply right now.')
+    } finally {
+      setLoading(false)
     }
+  }
 
-    setHistory(updatedHistory)
-
-    if (option.linkToExercise) {
-      router.push(option.linkToExercise)
-    }
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    void sendMessage(input)
   }
 
   const resetChat = () => {
-    setCurrentNodeId('start')
-    setHistory([{ sender: 'bot', text: CHAT_TREE.start.message }])
+    setHistory([{ sender: 'bot', text: initialMessage }])
+    setInput('')
+    setError('')
   }
 
   return (
-    <div className="min-h-screen pb-24" style={{ background: 'linear-gradient(180deg, #f0fdfa 0%, #f8fffe 100%)' }}>
+    <div className="app-page min-h-screen pb-24">
       <Navigation />
 
-      <main className="max-w-3xl mx-auto px-4 pt-4">
+      <main className="app-content max-w-3xl mx-auto px-4 pt-4">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-800">Guided First-Response Chat</h1>
-            <p className="text-xs text-teal-600 font-medium">Confidential · Decision-tree guided · Not an AI LLM</p>
+            <p className="text-xs text-teal-600 font-medium">Confidential · Guided support companion · Not a licensed counsellor</p>
           </div>
-          <button onClick={resetChat} className="text-xs text-gray-500 underline hover:text-teal-600">
+          <button onClick={resetChat} className="text-xs text-gray-500 hover:text-teal-600 flex items-center gap-1">
+            <RotateCcw className="w-3.5 h-3.5" />
             Reset Chat
           </button>
         </div>
@@ -161,7 +132,20 @@ export default function ChatbotPage() {
             <Shield className="w-4 h-4 text-rose-500" />
             In crisis? Need immediate human support?
           </span>
-          <a href="tel:14416" className="font-bold underline text-rose-800">Call 14416</a>
+          <span className="flex items-center gap-3">
+            <a href="tel:14416" className="font-bold underline text-rose-800">Call 14416</a>
+            <a
+              href="https://telemanas.mohfw.gov.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open Tele-MANAS website"
+              title="Open Tele-MANAS website"
+              className="inline-flex items-center gap-1 font-bold underline text-rose-800"
+            >
+              Tele-MANAS website
+              <ExternalLink className="h-3.5 w-3.5" />
+            </a>
+          </span>
         </div>
 
         {/* Chat window */}
@@ -181,35 +165,60 @@ export default function ChatbotPage() {
                     msg.sender === 'bot'
                       ? 'bg-teal-50/80 border border-teal-100 text-gray-800 rounded-tl-none'
                       : 'bg-teal-600 text-white rounded-tr-none shadow-sm'
-                  }`}
+                  } whitespace-pre-wrap break-words`}
                 >
                   {msg.text}
                 </div>
               </div>
             ))}
+
+            {loading && (
+              <div className="flex gap-3 items-start">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-teal-600 text-white">
+                  <Bot className="w-4 h-4" />
+                </div>
+                <div className="p-4 rounded-2xl rounded-tl-none bg-teal-50 border border-teal-100 text-gray-500 text-sm">
+                  ManoBot is thinking...
+                </div>
+              </div>
+            )}
           </div>
 
-          {/* Options Menu */}
-          {currentNode && currentNode.options.length > 0 && (
-            <div className="space-y-2 pt-4 border-t border-gray-100 animate-slide-up">
-              <p className="text-xs text-gray-400 font-semibold mb-2">Choose an option below:</p>
-              {currentNode.options.map((opt, i) => (
-                <button
-                  key={i}
-                  id={`chat-opt-${i}`}
-                  onClick={() => handleOptionClick(opt)}
-                  className={`w-full p-3.5 text-left rounded-xl text-xs font-semibold border transition-all flex items-center justify-between ${
-                    opt.isCrisis
-                      ? 'bg-rose-50 border-rose-200 text-rose-700 hover:bg-rose-100'
-                      : 'bg-white border-teal-200 text-teal-900 hover:bg-teal-50 hover:border-teal-400'
-                  }`}
-                >
-                  <span>{opt.label}</span>
-                  <ArrowRight className="w-4 h-4 text-teal-500 opacity-60" />
-                </button>
-              ))}
+          {error && (
+            <p className="mb-3 rounded-xl bg-rose-50 border border-rose-200 p-3 text-xs text-rose-800">{error}</p>
+          )}
+
+          {suggestedReplies.length > 0 && !loading && (
+            <div className="pt-4 border-t border-gray-100">
+              <p className="text-xs text-gray-500 font-semibold mb-2">You could say:</p>
+              <div className="flex flex-wrap gap-2">
+                {suggestedReplies.map(reply => (
+                  <button
+                    key={reply}
+                    type="button"
+                    onClick={() => void sendMessage(reply)}
+                    className="chat-suggestion px-3 py-2 rounded-full text-xs font-semibold border bg-teal-50 border-teal-200 text-teal-800 hover:bg-teal-100 hover:border-teal-400 transition-colors"
+                  >
+                    {reply}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
+
+          <form onSubmit={handleSubmit} className="mt-4 flex items-center gap-2 border-t border-gray-100 pt-4">
+            <input
+              value={input}
+              onChange={event => setInput(event.target.value)}
+              placeholder="Type how you feel..."
+              aria-label="Message ManoBot"
+              disabled={loading}
+              className="input-field flex-1 rounded-full py-3"
+            />
+            <button type="submit" disabled={loading || !input.trim()} aria-label="Send message" className="btn-primary p-3 disabled:opacity-50 disabled:cursor-not-allowed">
+              <Send className="w-4 h-4" />
+            </button>
+          </form>
         </div>
       </main>
     </div>
