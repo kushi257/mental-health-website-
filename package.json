@@ -2,11 +2,11 @@
   "name": "manomitra",
   "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "prisma generate && next build",
-    "start": "next start",
-    "postinstall": "prisma generate",
+  "scripts": 
+  "dev": "next dev",
+  "build": "prisma generate && next build",
+  "start": "next start"
+  "postinstall": "prisma generate",
     "lint": "eslint",
     "db:migrate": "prisma migrate dev --name init",
     "db:generate": "prisma generate",
