@@ -6,7 +6,7 @@ import Navigation from '@/components/Navigation'
 import {
   Heart, Dumbbell, Video, MessageCircle, Calendar,
   Shield, BarChart2, Users, Star, Leaf, TreePine, Flower2,
-  ChevronRight, Award, Zap, Sun, Moon, Cloud, ArrowRight, Sparkles
+  ChevronRight, Award, Zap, Sun, Moon, Cloud
 } from 'lucide-react'
 
 interface DashboardData {
@@ -150,42 +150,36 @@ export default function DashboardPage() {
   const moodScore = (data?.recentMood || 3) - 1
 
   return (
-    <div className="app-page min-h-screen pb-24">
+    <div className="min-h-screen pb-24" style={{ background: 'linear-gradient(180deg, #f0fdfa 0%, #f8fffe 100%)' }}>
       <Navigation name={data?.name} />
 
-      <main className="app-content max-w-4xl mx-auto px-4 pt-4 pb-8">
+      <main className="max-w-4xl mx-auto px-4 pt-4 pb-8">
         {/* Hero greeting */}
-        <div className="dashboard-reveal dashboard-hero mb-6 overflow-hidden relative">
-          <div className="dashboard-hero-glow dashboard-hero-glow-one" />
-          <div className="dashboard-hero-glow dashboard-hero-glow-two" />
-          <div className="relative z-10">
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-2">
+        <div className="glass-card p-6 mb-6 overflow-hidden relative">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-teal-200/50 to-blue-200/50 rounded-full -translate-y-8 translate-x-8 blur-2xl" />
+          <div className="relative">
+            <div className="flex items-center gap-2 mb-1">
               {greeting.includes('morning') ? <Sun className="w-5 h-5 text-amber-500" />
                 : greeting.includes('evening') ? <Moon className="w-5 h-5 text-indigo-500" />
                   : <Cloud className="w-5 h-5 text-blue-400" />}
-                <p className="font-semibold text-white/80">{greeting}</p>
-              </div>
-              <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-white/80">Your space today</span>
+              <p className="text-gray-500 font-medium">{greeting}</p>
             </div>
-            <p className="mb-2 text-xs font-bold uppercase tracking-[0.2em] text-teal-100">A gentle check-in</p>
-            <h1 className="mb-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+            <h1 className="text-3xl font-bold text-gray-800 mb-3">
               {data?.name === 'Anonymous' ? 'Welcome back 👋' : `${data?.name} 👋`}
             </h1>
-            <p className="mb-6 max-w-xl text-sm leading-6 text-white/75">You can take this one moment at a time. Here&apos;s a quiet place to notice what you need today.</p>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/12 px-4 py-3 backdrop-blur-sm">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2">
                 <span className="text-3xl">{MOOD_EMOJIS[moodScore]}</span>
                 <div>
-                  <p className="text-xs text-white/65">Last mood</p>
+                  <p className="text-xs text-gray-400">Last mood</p>
                   <p className="font-semibold" style={{ color: MOOD_COLORS[moodScore] }}>
                     {MOOD_LABELS[moodScore]}
                   </p>
                 </div>
               </div>
               {data?.tier && (
-                <div className={`px-3 py-2 rounded-full text-xs font-semibold ${
+                <div className={`px-3 py-1.5 rounded-full text-xs font-semibold ${
                   data.tier === 'HIGH' ? 'tier-high' :
                   data.tier === 'MODERATE' ? 'tier-moderate' : 'tier-low'
                 }`}>
@@ -196,34 +190,8 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Daily pause */}
-        <section className="dashboard-reveal dashboard-pause glass-card mb-6 overflow-hidden">
-          <div className="grid items-stretch sm:grid-cols-[0.9fr_1.1fr]">
-            <div className="relative min-h-56 overflow-hidden sm:min-h-0">
-              <img
-                src="https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=900&q=85"
-                alt="Sunlight across a quiet green landscape"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 dashboard-photo"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-teal-950/35 via-transparent to-transparent" />
-              <span className="absolute bottom-4 left-4 rounded-full bg-white/85 px-3 py-1.5 text-[11px] font-bold text-teal-800 shadow-sm backdrop-blur-sm">
-                A moment to reset
-              </span>
-            </div>
-            <div className="flex flex-col justify-center p-6 sm:p-7">
-              <div className="mb-3 flex items-center gap-2 text-teal-700">
-                <Sparkles className="h-4 w-4" />
-                <span className="text-xs font-bold uppercase tracking-[0.16em]">Your daily pause</span>
-              </div>
-              <h2 className="mb-2 text-xl font-bold text-gray-800">You don&apos;t have to fix everything today.</h2>
-              <p className="mb-5 max-w-md text-sm leading-6 text-gray-500">Take one slow breath, notice where you are, and choose the smallest kind next step.</p>
-              <Link href="/mood" className="btn-primary w-fit px-4 py-2 text-sm">Check in with yourself <ArrowRight className="h-4 w-4" /></Link>
-            </div>
-          </div>
-        </section>
-
         {/* Garden / Gamification */}
-        <div className="dashboard-reveal dashboard-garden glass-card p-6 mb-6">
+        <div className="glass-card p-6 mb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="font-bold text-gray-800 flex items-center gap-2">
@@ -254,11 +222,11 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick tiles */}
-        <h2 className="dashboard-reveal font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
+        <h2 className="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
           <Zap className="w-5 h-5 text-amber-500" />
           Quick access
         </h2>
-        <div className="dashboard-reveal dashboard-quick-grid grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
           {tiles.map(tile => {
             const Icon = tile.icon
             return (
@@ -266,7 +234,7 @@ export default function DashboardPage() {
                 key={tile.href}
                 href={tile.href}
                 id={`tile-${tile.label.toLowerCase().replace(/ /g, '-')}`}
-                className="dashboard-tile glass-card p-5 transition-all duration-200 group"
+                className="glass-card p-5 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 group"
               >
                 <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${tile.color} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                   <Icon className="w-6 h-6 text-white" />
@@ -280,7 +248,7 @@ export default function DashboardPage() {
 
         {/* Recent activity */}
         {(data?.completions?.length ?? 0) > 0 && (
-          <div className="dashboard-reveal glass-card p-6">
+          <div className="glass-card p-6">
             <h2 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
               <Star className="w-5 h-5 text-amber-500" />
               Recent activity

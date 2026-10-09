@@ -116,10 +116,10 @@ export default function ExercisesPage() {
   const filtered = filter === 'all' ? exercises : exercises.filter(e => e.category === filter)
 
   return (
-    <div className="app-page min-h-screen pb-24">
+    <div className="min-h-screen pb-24" style={{ background: 'linear-gradient(180deg, #faf5ff 0%, #f8fffe 100%)' }}>
       <Navigation />
 
-      <main className="app-content max-w-4xl mx-auto px-4 pt-4">
+      <main className="max-w-4xl mx-auto px-4 pt-4">
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-800 mb-1">Self-Help Library</h1>
           <p className="text-gray-500">Evidence-based exercises to support your wellbeing</p>

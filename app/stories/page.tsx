@@ -40,10 +40,10 @@ const STORIES = [
 
 export default function PeerStoriesPage() {
   return (
-    <div className="app-page min-h-screen pb-24">
+    <div className="min-h-screen pb-24" style={{ background: 'linear-gradient(180deg, #f0fdfa 0%, #f8fffe 100%)' }}>
       <Navigation />
 
-      <main className="app-content max-w-3xl mx-auto px-4 pt-4">
+      <main className="max-w-3xl mx-auto px-4 pt-4">
         <div className="mb-6">
           <div className="flex items-center gap-2">
             <h1 className="text-2xl font-bold text-gray-800">Moderated Peer Stories</h1>
